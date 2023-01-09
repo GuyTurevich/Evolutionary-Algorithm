@@ -1,5 +1,5 @@
 from eckity.evaluators.simple_individual_evaluator import SimpleIndividualEvaluator
-from CliqueCreator import QulickCreator
+from CliqueCreator import CliqueCreator
 
 
 class CliqueEvaluator(SimpleIndividualEvaluator):

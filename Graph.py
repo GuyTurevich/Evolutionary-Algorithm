@@ -4,10 +4,10 @@ from Vertex import Vertex
 class Graph:
     def __init__(self, n: int):
         self.n = n
-        arr = [n]
-        for i in range(0, self.n):
-            arr[i] = Vertex(i)
-        self.vertices = arr
+        self.vertices = list()
+        for i in range(self.n):
+            self.vertices.append(Vertex(i))
+        
 
     def get_vertex(self, i:int):
         return self.vertices[i]
