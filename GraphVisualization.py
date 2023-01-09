@@ -6,7 +6,7 @@ class GraphVisualization:
 
     G = nx.Graph()
 
-    def __init__(self, *graph: Graph):
+    def __init__(self, graph: Graph):
         self.visual = []
         self.graph = graph
           
@@ -24,15 +24,15 @@ class GraphVisualization:
                     self.visual.append(temp)
         self.G.add_edges_from(self.visual)
 
-          
-    # In visualize function G is an object of
-    # class Graph given by networkx G.add_edges_from(visual)
-    # creates a graph with a given list
-    # nx.draw_networkx(G) - plots the graph
-    # plt.show() - displays the graph
-    def visualize(self):
+    def visualize(self, *individual):
         self.G.add_nodes(len(self.graph.get_vertices()))
         self.G.add_edges(self.graph.get_vertices())
+        if(individual):
+            for i in range(len(individual)):
+                if(individual[i] == 1):
+                    self.G.nodes[i]['color'] = 'red'
+                else:
+                    self.G.nodes[i]['color'] = 'black'
         nx.draw_networkx(self.G)
         plt.show()
   
