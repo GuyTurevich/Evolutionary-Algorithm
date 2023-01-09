@@ -1,13 +1,13 @@
-import RandomGraph
-import CliqueEvaluator
-import CliqueCreator
-import GraphVisualization
+from RandomGraph import RandomGraph
+from CliqueEvaluator import CliqueEvaluator
+from CliqueCreator import CliqueCreator
+from GraphVisualization import GraphVisualization
 
 class test:
-    graph = RandomGraph.get_graph()
-    evaluator = CliqueEvaluator.CliqueEvaluator()
-    creator = CliqueCreator.CliqueCreator();
-    individuals = creator.create_individuals(10)
-    for i in individuals:
-        GraphVisualization.GraphVisualization(graph).visualize()
-        print(evaluator.fitness(i, graph))
+    graph = RandomGraph(12).get_graph()
+    evaluator = CliqueEvaluator()
+    creator = CliqueCreator()
+    individuals = creator.create_individuals(5)
+    GraphVisualization(graph).visualize()
+    for individual in individuals:
+        GraphVisualization(graph).visualize(individual, evaluator.fitness(individual, graph))

@@ -9,6 +9,7 @@ class GraphVisualization:
     def __init__(self, graph: Graph):
         self.visual = []
         self.graph = graph
+        self.n = graph.get_num_vertices()
           
     
     def add_nodes(self, n):
@@ -24,15 +25,27 @@ class GraphVisualization:
                     self.visual.append(temp)
         self.G.add_edges_from(self.visual)
 
-    def visualize(self, *individual):
-        self.G.add_nodes(len(self.graph.get_vertices()))
-        self.G.add_edges(self.graph.get_vertices())
-        if(individual):
+    def visualize(self, *args): # 'args' could contain an individual if needed, and 'print' indicates if the graph should be printed or saved
+        # create the graph
+        num_of_vertices = self.graph.get_num_vertices()
+        self.add_nodes(num_of_vertices)
+        self.add_edges(self.graph.get_vertices())
+
+        
+        
+        if len(args) > 0:    # color the nodes if an individual is given
+            individual = args[0]
+            colors = []
             for i in range(len(individual)):
                 if(individual[i] == 1):
-                    self.G.nodes[i]['color'] = 'red'
+                    colors.append('red')
                 else:
-                    self.G.nodes[i]['color'] = 'black'
-        nx.draw_networkx(self.G)
+                    colors.append('gray')
+            nx.draw_networkx(self.G, pos = nx.spring_layout(self.G), node_color = colors)
+            if len(args) > 1:
+                plt.text(0.5, 0.9, "Fitness: " + str(args[1]), ha="center", transform=plt.gcf().transFigure)  # add the fitness value if given
+        else:
+            nx.draw_networkx(self.G, pos = nx.spring_layout(self.G))
+        
         plt.show()
   
