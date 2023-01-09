@@ -12,6 +12,12 @@ class Graph:
     def get_vertex(self, i:int):
         return self.vertices[i]
 
-    def add_neighbours(self, v1: Vertex, v2: Vertex):
-        v1.add_neighbour(v2.get_index)
-        v2.add_neighbour(v1.get_index)
+    def get_vertices(self):
+        return self.vertices
+
+    def add_neighbours(self, v1: int, v2: int):
+        self.get_vertex(v1).add_neighbour(v2)
+        self.get_vertex(v2).add_neighbour(v1)
+
+    def get_num_vertices(self):
+        return self.n

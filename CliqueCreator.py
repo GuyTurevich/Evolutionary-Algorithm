@@ -11,7 +11,7 @@ class CliqueCreator(Creator):
         population = []
         for i in range(n_individuals):
             individual = []
-            for j in range(RandomGraph.get_n_vertices):
+            for j in range(RandomGraph.get_instance().num_of_vertices):
                 individual.append(random.randint(0, 1))
             population.append(individual)
         return population
