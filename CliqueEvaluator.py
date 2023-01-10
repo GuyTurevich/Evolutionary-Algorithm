@@ -7,8 +7,6 @@ class CliqueEvaluator(SimpleIndividualEvaluator):
         super().__init__()
 
     def fitness(self, individual, graph):
-        clique_count = 0
-        clique_size = 0
         
         # Create a list to store the cliques in the individual
         cliques = []
@@ -31,14 +29,17 @@ class CliqueEvaluator(SimpleIndividualEvaluator):
                     cliques.append(currentClique)
                     biggest_clique_size = max(biggest_clique_size, len(currentClique))
             
-        # Calculate the fitness of the individual based on the size of the cliques and the number of 1's that don't belong to any clique
         fitness = 0
+        if biggest_clique_size == 0:
+            return -(graph.get_num_vertices())
+
+        elif biggest_clique_size > 1:
+            fitness = biggest_clique_size
+            if len(cliques) == 1:
+                fitness += 0.5
+        
         for c in cliques:
             if(len(c) == 1): # If the clique is a single vertex, it is not a clique
                 fitness -= 1
-            elif len(c) != biggest_clique_size: 
-                fitness += len(c)
-            else:
-                fitness += len(c) ** 2 # If the clique is the biggest clique, give it a higher fitness value
         
         return fitness
