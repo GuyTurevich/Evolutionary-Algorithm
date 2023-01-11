@@ -25,8 +25,7 @@ class GraphVisualization:
                     self.visual.append(temp)
         self.G.add_edges_from(self.visual)
 
-    def visualize(self, *args): # 'args' could contain an individual if needed, and 'print' indicates if the graph should be printed or saved
-        # create the graph
+    def visualize(self, *args): # 'args' could contain an individual and its fitness value
         num_of_vertices = self.graph.get_num_vertices()
         self.add_nodes(num_of_vertices)
         self.add_edges(self.graph.get_vertices())
@@ -41,11 +40,11 @@ class GraphVisualization:
                     colors.append('red')
                 else:
                     colors.append('gray')
-            nx.draw_networkx(self.G, pos = nx.spring_layout(self.G), node_color = colors)
+            nx.draw_networkx(self.G, pos = nx.spring_layout(self.G), width = 0.5, node_color = colors)
             if len(args) > 1:
                 plt.text(0.5, 0.9, "Fitness: " + str(args[1]), ha="center", transform=plt.gcf().transFigure)  # add the fitness value if given
         else:
-            nx.draw_networkx(self.G, pos = nx.spring_layout(self.G))
+            nx.draw_networkx(self.G, pos = nx.spring_layout(self.G), width = 0.1)
         
-        plt.show()
+        plt.savefig("graph.png", dpi = 600)
   

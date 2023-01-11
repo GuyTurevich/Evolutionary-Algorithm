@@ -8,38 +8,38 @@ class CliqueEvaluator(SimpleIndividualEvaluator):
 
     def fitness(self, individual, graph):
         
-        # Create a list to store the cliques in the individual
-        cliques = []
-
-        currentClique = []
-
         biggest_clique_size = 0
+        redundant_vertices_count = 0
+        num_of_ones = 0
 
         for i in range(len(individual)):
             if individual[i] == 1:
-                is_in_clique = False
+
+                num_of_ones += 1
+                cliques = []
+                is_redudant = True
+                
+                # adds a clique for each vertex the vertex 'i' is connected to
+                # create new clique only for vertices with a bigger index than 'i'
+                # increment redundant_vertices_count if the vertex 'i' is not connected to any other vertex
+                for j in range(len(individual)):
+                    if individual[j] == 1 and graph.get_vertex(i).is_neighbour(j):
+                        is_redudant = False
+                        if j > i:
+                            cliques.append({i, j})
+                if is_redudant:
+                    redundant_vertices_count += 1
+
+                # for each clique in the list, add all vertices that are connected to all vertices in the clique
                 for c in cliques:
-                    if all([graph.get_vertex(i).is_neighbour(j) for j in c]):
-                        c.append(i)
-                        is_in_clique = True
-                        biggest_clique_size = max(biggest_clique_size, len(c))
+                    for j in range(i+1, len(individual)):
+                        if individual[j] == 1 and all([graph.get_vertex(j).is_neighbour(k) for k in c]):
+                            c.add(j)
+                
+                # update biggest_clique_size if needed
+                if len(cliques) > 0:
+                    biggest_clique_size = max(biggest_clique_size, max([len(c) for c in cliques]))
 
-                if not is_in_clique:
-                    currentClique = [i]
-                    cliques.append(currentClique)
-                    biggest_clique_size = max(biggest_clique_size, len(currentClique))
-            
-        fitness = 0
-        if biggest_clique_size == 0:
-            return -(graph.get_num_vertices())
-
-        elif biggest_clique_size > 1:
-            fitness = biggest_clique_size
-            if len(cliques) == 1:
-                fitness += 0.5
+        # add a 0.5 bonus if the individual represents a clique perfectly
+        return biggest_clique_size + (0.5 if biggest_clique_size == num_of_ones else 0) - redundant_vertices_count
         
-        for c in cliques:
-            if(len(c) == 1): # If the clique is a single vertex, it is not a clique
-                fitness -= 1
-        
-        return fitness
