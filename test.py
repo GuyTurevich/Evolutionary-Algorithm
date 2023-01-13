@@ -1,10 +1,19 @@
 import random
 import time
+from CliqueCrossover import CliqueCrossover
+from CliqueMutation import CliqueMutation
 from RandomGraph import RandomGraph
 from CliqueEvaluator import CliqueEvaluator
 from CliqueCreator import CliqueCreator
 from GraphVisualization import GraphVisualization
 from Graph import Graph
+
+from eckity.algorithms.simple_evolution import SimpleEvolution
+from eckity.breeders.simple_breeder import SimpleBreeder
+from eckity.genetic_operators.selections.tournament_selection import TournamentSelection
+from eckity.statistics.best_average_worst_statistics import BestAverageWorstStatistics
+from eckity.subpopulation import Subpopulation
+from eckity.creators.ga_creators.bit_string_vector_creator import GABitStringVectorCreator
 
 class test:
 
@@ -27,6 +36,40 @@ class test:
         recurse(set(), set(range(graph.get_num_vertices())), set())
         return max_size, max_clique
 
+
+    population_size = 200
+    random_graph = RandomGraph(50).get_graph()
+    print (bron_kerbosch(random_graph))
+    algo = SimpleEvolution(
+        Subpopulation(creators = GABitStringVectorCreator(length = random_graph.get_num_vertices()),
+                      population_size=population_size,
+                      # user-defined fitness evaluation method
+                      evaluator= CliqueEvaluator(random_graph),
+                      # maximization problem (fitness is sum of values), so higher fitness is better
+                      higher_is_better=True,
+                      elitism_rate=0.05,
+                      # genetic operators sequence to be applied in each generation
+                      operators_sequence=[
+                          CliqueCrossover("uniform"),
+                          CliqueMutation(1, probability=0.1)
+                      ],
+                      selection_methods=[
+                          # (selection method, selection probability) tuple
+                          (TournamentSelection(tournament_size=4, higher_is_better=True), 1)
+                      ]),
+        breeder=SimpleBreeder(),
+        max_workers = 4,
+        max_generation = 100,
+        statistics = BestAverageWorstStatistics()
+    )
+    print("EA Process Presented Bellow:")
+
+    # evolve the generated initial population
+    algo.evolve()
+    print("#####################################")
+
+    print("The Ultimate solution found by our solver is:")
+    algo.finish()
 
     
 

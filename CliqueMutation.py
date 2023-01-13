@@ -8,9 +8,11 @@ class CliqueMutation(GeneticOperator): # Gets the number of bit flips - the numb
 
     def apply(self, individuals):
         for individual in individuals:
-            random_bits = [random.randint(0, len(individual)-1) for i in range(self.num_bit_flips)] # generate random indexes to mutate
+            individual_vector = individual.get_vector()
+            random_bits = [random.randint(0, len(individual_vector)-1) for i in range(self.num_bit_flips)] # generate random indexes to mutate
             for random_bit in random_bits:
-                individual[random_bit] = 1 if individual[random_bit] == 0 else 0
+                individual_vector[random_bit] = 1 if individual_vector[random_bit] == 0 else 0
+            individual.set_vector(individual_vector)
         self.applied_individuals = individuals
         return individuals
 
