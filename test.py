@@ -22,14 +22,14 @@ class test:
     def bron_kerbosch(graph: Graph) -> tuple[int, set[int]]:
         max_size = 0
         max_clique = set()
-        
-        def recurse(r: set, p: set, x: set):
+
+        def recurse(r, p, x):
             nonlocal max_size, max_clique
             if len(r) > max_size:
                 max_size = len(r)
                 max_clique = r
             for vertex in p.copy():
-                recurse(r | {vertex}, p & set(graph.get_vertex(vertex).get_neighbours()), x & set(graph.get_vertex(vertex).get_neighbours()))
+                recurse(r | {vertex}, p & set(graph.get_neighbours(vertex)), x & set(graph.get_neighbours(vertex)))
                 p.remove(vertex)
                 x.add(vertex)
 
@@ -38,8 +38,12 @@ class test:
 
 
     population_size = 200
-    random_graph = RandomGraph(50).get_graph()
+    random_graph = RandomGraph(100).get_graph()
+    GraphVisualization(random_graph).visualize()
+    print ("Starting Bron-Kerbosch Algorithm")
+    current_time = time.time()
     print (bron_kerbosch(random_graph))
+    print("Bron-Kerbosch Algorithm took: ", time.time() - current_time, " seconds")
     algo = SimpleEvolution(
         Subpopulation(creators = GABitStringVectorCreator(length = random_graph.get_num_vertices()),
                       population_size=population_size,
@@ -59,7 +63,7 @@ class test:
                       ]),
         breeder=SimpleBreeder(),
         max_workers = 4,
-        max_generation = 100,
+        max_generation = 300,
         statistics = BestAverageWorstStatistics()
     )
     print("EA Process Presented Bellow:")

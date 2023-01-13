@@ -13,7 +13,7 @@ class RandomGraph:
             self.inputGraph = Graph(num_of_vertices)
             for i in range(num_of_vertices):
                 for j in range(i+1,num_of_vertices):
-                    if random.uniform(0,1) >= 0.3:              # 70% chance of being connected
+                    if random.uniform(0,1) >= 0.5:              # 50% chance of being connected
                         self.inputGraph.add_neighbours(i , j)
             RandomGraph.__instance = self                       # singleton instance created
 

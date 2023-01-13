@@ -2,22 +2,36 @@ from Vertex import Vertex
 
 
 class Graph:
-    def __init__(self, n: int):
-        self.n = n
-        self.vertices = list()
-        for i in range(self.n):
-            self.vertices.append(Vertex(i))
+    def __init__(self, num_of_vertices: int):
+        self.num_of_vertices = num_of_vertices
+        self.adjacency_matrix = [[0 for i in range(num_of_vertices)] for j in range(num_of_vertices)]
+        # self.vertices = list()
+        # for i in range(self.n):
+        #     self.vertices.append(Vertex(i))
         
-
-    def get_vertex(self, i:int):
-        return self.vertices[i]
-
-    def get_vertices(self):
-        return self.vertices
-
+    
     def add_neighbours(self, v1: int, v2: int):
-        self.get_vertex(v1).add_neighbour(v2)
-        self.get_vertex(v2).add_neighbour(v1)
+        self.adjacency_matrix[v1][v2] = 1
+        self.adjacency_matrix[v2][v1] = 1
+    
+    def is_neighbour(self, v1: int, v2: int):
+        return self.adjacency_matrix[v1][v2] == 1
+
+    def get_neighbours(self, v: int):
+        neighbours = list()
+        for i in range(self.num_of_vertices):
+            if self.is_neighbour(v, i):
+                neighbours.append(i)
+        return neighbours
+
+    def get_adjacency_matrix(self):
+        return self.adjacency_matrix
 
     def get_num_vertices(self):
-        return self.n
+        return self.num_of_vertices
+
+    # def get_vertex(self, i:int):
+    #     return self.vertices[i]
+
+    # def get_vertices(self):
+    #     return self.vertices

@@ -1,5 +1,5 @@
 from eckity.evaluators.simple_individual_evaluator import SimpleIndividualEvaluator
-from CliqueCreator import CliqueCreator
+from Graph import Graph
 
 
 class CliqueEvaluator(SimpleIndividualEvaluator):
@@ -25,7 +25,7 @@ class CliqueEvaluator(SimpleIndividualEvaluator):
                 # create new clique only for vertices with a bigger index than 'i'
                 # increment redundant_vertices_count if the vertex 'i' is not connected to any other vertex
                 for j in range(len(individual_vector)):
-                    if individual_vector[j] == 1 and self.graph.get_vertex(i).is_neighbour(j):
+                    if individual_vector[j] == 1 and self.graph.is_neighbour(i,j):
                         is_redudant = False
                         if j > i:
                             cliques.append({i, j})
@@ -35,7 +35,7 @@ class CliqueEvaluator(SimpleIndividualEvaluator):
                 # for each clique in the list, add all vertices that are connected to all vertices in the clique
                 for c in cliques:
                     for j in range(i+1, len(individual_vector)):
-                        if individual_vector[j] == 1 and all([self.graph.get_vertex(j).is_neighbour(k) for k in c]):
+                        if individual_vector[j] == 1 and all([self.graph.is_neighbour(j,k) for k in c]):
                             c.add(j)
                 
                 # update biggest_clique_size if needed
