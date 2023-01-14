@@ -45,4 +45,4 @@ class CliqueEvaluator(SimpleIndividualEvaluator):
         # add a bonus based on the ratio of the biggest clique size to the number of vertices in the individual
         bonus = biggest_clique_size/num_of_ones if num_of_ones != 0 else 0
         
-        return biggest_clique_size + bonus - redundant_vertices_count
+        return biggest_clique_size + bonus - 1

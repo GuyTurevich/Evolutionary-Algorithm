@@ -10,6 +10,8 @@ class GraphVisualization:
         self.visual = []
         self.graph = graph
         self.n = graph.get_num_vertices()
+        self.add_nodes(self.n)
+        self.add_edges(self.graph.get_adjacency_matrix())
           
     
     def add_nodes(self, n):
@@ -22,13 +24,13 @@ class GraphVisualization:
                 if adjacency_matrix[i][j] == 1:
                     self.visual.append((i, j))
         self.G.add_edges_from(self.visual)
+    
+    def nx_find_max_clique(self):
+        cliques = list(nx.find_cliques(self.G))
+        max_clique = max(cliques, key=len)
+        return max_clique
 
     def visualize(self, *args): # 'args' could contain an individual and its fitness value
-        num_of_vertices = self.graph.get_num_vertices()
-        self.add_nodes(num_of_vertices)
-        self.add_edges(self.graph.get_adjacency_matrix())
-
-        
         
         if len(args) > 0:    # color the nodes if an individual is given
             individual = args[0]

@@ -7,7 +7,7 @@ class RandomGraph:
 
     def __init__(self,num_of_vertices : int, probability : float):
         if RandomGraph.__instance != None:
-            raise Exception("Singleton already exists, use get_instance() method")
+            return self.__instance
         else:
             self.num_of_vertices = num_of_vertices
             self.inputGraph = Graph(num_of_vertices)
