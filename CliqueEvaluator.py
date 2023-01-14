@@ -42,7 +42,7 @@ class CliqueEvaluator(SimpleIndividualEvaluator):
                 if len(cliques) > 0:
                     biggest_clique_size = max(biggest_clique_size, max([len(c) for c in cliques]))
 
-        # add a 0.5 bonus if the individual_vector represents a clique perfectly
+        # add a bonus based on the ratio of the biggest clique size to the number of vertices in the individual
         bonus = biggest_clique_size/num_of_ones if num_of_ones != 0 else 0
-        return biggest_clique_size + bonus - redundant_vertices_count
         
+        return biggest_clique_size + bonus - redundant_vertices_count
