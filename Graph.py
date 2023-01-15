@@ -1,15 +1,10 @@
-from Vertex import Vertex
 
 
 class Graph:
     def __init__(self, num_of_vertices: int):
         self.num_of_vertices = num_of_vertices
         self.adjacency_matrix = [[0 for i in range(num_of_vertices)] for j in range(num_of_vertices)]
-        # self.vertices = list()
-        # for i in range(self.n):
-        #     self.vertices.append(Vertex(i))
         
-    
     def add_neighbours(self, v1: int, v2: int):
         self.adjacency_matrix[v1][v2] = 1
         self.adjacency_matrix[v2][v1] = 1
@@ -29,9 +24,3 @@ class Graph:
 
     def get_num_vertices(self):
         return self.num_of_vertices
-
-    # def get_vertex(self, i:int):
-    #     return self.vertices[i]
-
-    # def get_vertices(self):
-    #     return self.vertices

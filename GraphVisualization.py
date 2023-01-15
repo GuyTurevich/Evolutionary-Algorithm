@@ -35,16 +35,30 @@ class GraphVisualization:
         if len(args) > 0:    # color the nodes if an individual is given
             individual = args[0]
             colors = []
+            widths = []
+
             for i in range(len(individual)):
                 if(individual[i] == 1):
-                    colors.append('red')
+                    colors.append('royalblue')
                 else:
-                    colors.append('gray')
-            nx.draw_networkx(self.G, pos = nx.spring_layout(self.G), width = 0.15, node_color = colors)
+                    colors.append('lightblue')
+                    
+            for edge in self.G.edges:
+                if individual[edge[0]] == 1 and individual[edge[1]] == 1:
+                    self.G[edge[0]][edge[1]]['edgecolor'] = 'purple'
+                    widths.append(0.7)
+                else: 
+                    self.G[edge[0]][edge[1]]['edgecolor'] = 'gray'
+                    widths.append(0.10)
+
+            
+            edge_colors = [self.G[edge[0]][edge[1]]['edgecolor'] for edge in self.G.edges() ]
+                
+            nx.draw_networkx(self.G, pos = nx.spring_layout(self.G),edge_color = edge_colors, width = widths, node_size = 70, font_size = 6, node_color = colors)
             if len(args) > 1:
+            
                 plt.text(0.5, 0.9, "Fitness: " + str(args[1]), ha="center", transform=plt.gcf().transFigure)  # add the fitness value if given
         else:
             nx.draw_networkx(self.G, pos = nx.spring_layout(self.G), width = 0.15, node_size = 70, font_size = 6)
         
-        plt.savefig("graph.png", dpi = 600)
-  
+        plt.show()
