@@ -5,7 +5,6 @@ from CliqueMutation import CliqueMutation
 from CliqueEvaluator import CliqueEvaluator
 from GraphVisualization import GraphVisualization
 from Graph import Graph
-from termcolor import colored
 
 from eckity.algorithms.simple_evolution import SimpleEvolution
 from eckity.breeders.simple_breeder import SimpleBreeder
@@ -34,6 +33,7 @@ class EvolutionaryAlgorithm:
 
     def run(self):
         self.before_run()
+        start_time = time.time()
         algo = SimpleEvolution(
             Subpopulation(creators=GABitStringVectorCreator(self.num_vertices),
                           population_size=self.population_size,
@@ -62,6 +62,8 @@ class EvolutionaryAlgorithm:
 
         algo.evolve()
         print("#####################################")
+        print("Total Time: ", f'{(time.time() - start_time):.2f}', " seconds")
+
         individual = algo.best_of_run_.vector
         self.graph_visualization.visualize(
             individual, algo.best_of_run_.get_pure_fitness())
@@ -69,13 +71,12 @@ class EvolutionaryAlgorithm:
 
     def before_run(self):
         print("Starting NetworkX Algorithm for maximum clique")
-        current_time = time.time()
         max_clique = self.graph_visualization.nx_find_max_clique()
         print((len(max_clique), max_clique))
-        print("NetworkX Algorithm took: ", time.time() - current_time, " seconds\n")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
         print("Running Evolutionary Algorithm")
-        print("Graph Size: " + colored(str(self.num_vertices), 'red'))
+        print("Graph Size: " + str(self.num_vertices))
         print("Graph Edge Probability: " + str(self.edge_prob))
         print("Population Size: " + str(self.population_size))
         print("Elitism Rate: " + str(self.elitism_rate))

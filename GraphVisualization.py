@@ -4,12 +4,12 @@ from Graph import Graph
 
 class GraphVisualization:
 
-    G = nx.Graph()
 
     def __init__(self, graph: Graph):
         self.visual = []
         self.graph = graph
         self.n = graph.get_num_vertices()
+        self.G = nx.Graph()
         self.add_nodes(self.n)
         self.add_edges(self.graph.get_adjacency_matrix())
           
