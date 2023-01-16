@@ -10,6 +10,7 @@ class GraphVisualization:
         self.graph = graph
         self.n = graph.get_num_vertices()
         self.G = nx.Graph()
+        self.G.clear()
         self.add_nodes(self.n)
         self.add_edges(self.graph.get_adjacency_matrix())
           

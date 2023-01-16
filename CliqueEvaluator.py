@@ -14,7 +14,6 @@ class CliqueEvaluator(SimpleIndividualEvaluator):
         else:
             individual_vector = individual.get_vector()
             biggest_clique_size = 0
-            redundant_vertices_count = 0
             num_of_ones = 0
 
             for i in range(len(individual_vector)):
@@ -22,18 +21,14 @@ class CliqueEvaluator(SimpleIndividualEvaluator):
 
                     num_of_ones += 1
                     cliques = []
-                    is_redudant = True
-                    
+                
                     # adds a clique for each vertex the vertex 'i' is connected to
                     # create new clique only for vertices with a bigger index than 'i'
                     # increment redundant_vertices_count if the vertex 'i' is not connected to any other vertex
                     for j in range(len(individual_vector)):
                         if individual_vector[j] == 1 and self.graph.is_neighbour(i,j):
-                            is_redudant = False
                             if j > i:
                                 cliques.append({i, j})
-                    if is_redudant:
-                        redundant_vertices_count += 1
 
                     # for each clique in the list, add all vertices that are connected to all vertices in the clique
                     for c in cliques:

@@ -1,3 +1,5 @@
+import multiprocessing
+import threading
 import time
 import tkinter as tk
 from tkinter import ttk
@@ -15,7 +17,6 @@ class StdoutRedirector(object):
 def update_mutation_bit_flips_max(val):
     mutation_bit_flips_scale.config(to=int(val))
 
-
 def start_algorithm():
     start_button.config(state='disable')
     graph_size = graph_size_var.get()
@@ -28,16 +29,18 @@ def start_algorithm():
     tournament_prob = tournament_prob_var.get()
     crossover_type = crossover_var.get()
     max_generation = max_generation_var.get()
-    
+    num_generations_unchanged = num_generations_unchanged_var.get()
 
     tab = tk.Text(notebook)
     notebook.add(tab, text="Run " + str(notebook.index("end")))
     notebook.select(tab)
     sys.stdout = StdoutRedirector(tab)
-    algo = EvolutionaryAlgorithm(graph_size, edge_prob, population_size, elitism_rate, mutation_prob, mutation_bit_flips, tournament_size, tournament_prob, crossover_type , max_generation)
+    algo = EvolutionaryAlgorithm(graph_size, edge_prob, population_size, elitism_rate, mutation_prob, mutation_bit_flips, tournament_size, tournament_prob, crossover_type , max_generation, num_generations_unchanged)
     algo.run()
     sys.stdout = sys.__stdout__
     start_button.config(state='normal')
+
+
 
 root = tk.Tk()
 root.title("Evolutionary Algorithm")
@@ -169,10 +172,18 @@ max_generation_entry.bind("<Return>", on_entry_change)
 max_generation_var.trace("w",lambda *args: max_generation_entry.delete(0,tk.END))
 max_generation_var.trace("w",lambda *args: max_generation_entry.insert(0, max_generation_var.get()))
 
+# Number of generations unchanged before stopping
+num_generations_unchanged_label = tk.Label(left_frame, text="Unchanged generations termination:")
+num_generations_unchanged_label.grid(row=10, column=0, padx=5, pady=5)
+num_generations_unchanged_var = tk.IntVar()
+num_generations_unchanged_var.set(15)
+num_generations_unchanged_scale = tk.Scale(left_frame, from_=5, to=100, variable=num_generations_unchanged_var, orient='horizontal')
+num_generations_unchanged_scale.grid(row=10, column=1, padx=5, pady=5)
+
 
 # Start button
 start_button = tk.Button(left_frame, text="Start", command=start_algorithm)
-start_button.grid(row=10, column=0, columnspan=2, padx=5, pady=5, ipadx=50)
+start_button.grid(row=11, column=0, columnspan=2, padx=5, pady=5, ipadx=50)
 
 # # stdout text box
 # stdout_text = tk.Text(right_frame)
