@@ -1,5 +1,4 @@
 
-
 class Graph:
     def __init__(self, num_of_vertices: int):
         self.num_of_vertices = num_of_vertices

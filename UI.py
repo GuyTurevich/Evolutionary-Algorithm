@@ -1,6 +1,3 @@
-import multiprocessing
-import threading
-import time
 import tkinter as tk
 from tkinter import ttk
 import sys
@@ -61,7 +58,7 @@ graph_size_label = tk.Label(left_frame, text="Graph Size:")
 graph_size_label.grid(row=0, column=0, padx=5, pady=5)
 graph_size_var = tk.IntVar()
 graph_size_var.set(30)
-graph_size_scale = tk.Scale(left_frame, from_=10, to=200, variable=graph_size_var, orient='horizontal', command=update_mutation_bit_flips_max)
+graph_size_scale = tk.Scale(left_frame, from_=5, to=200, variable=graph_size_var, orient='horizontal', command=update_mutation_bit_flips_max)
 graph_size_scale.grid(row=0, column=1, padx=5, pady=5)
 
 graph_size_entry = tk.Entry(left_frame)
@@ -80,7 +77,7 @@ graph_size_var.trace("w",lambda *args: graph_size_entry.insert(0, graph_size_var
 edge_prob_label = tk.Label(left_frame, text="Graph Edge Probability:")
 edge_prob_label.grid(row=1, column=0, padx=5, pady=5)
 edge_prob_var = tk.DoubleVar()
-edge_prob_var.set(0.5)
+edge_prob_var.set(0.7)
 edge_prob_scale = tk.Scale(left_frame, from_=0.01, to=0.99, variable=edge_prob_var, orient='horizontal',resolution = 0.01)
 edge_prob_scale.grid(row=1, column=1, padx=5, pady=5)
 
@@ -117,7 +114,7 @@ elitism_rate_scale.grid(row=3, column=1, padx=5, pady=5)
 mutation_prob_label = tk.Label(left_frame, text="Mutation Probability:")
 mutation_prob_label.grid(row=4, column=0, padx=5, pady=5)
 mutation_prob_var = tk.DoubleVar()
-mutation_prob_var.set(0.1)
+mutation_prob_var.set(0.05)
 mutation_prob_scale =  tk.Scale(left_frame, from_=0.01, to=1, variable=mutation_prob_var, orient='horizontal',resolution=0.01)
 mutation_prob_scale.grid(row=4, column=1, padx=5, pady=5)
 

@@ -5,6 +5,7 @@ from CliqueMutation import CliqueMutation
 from CliqueEvaluator import CliqueEvaluator
 from GraphVisualization import GraphVisualization
 from Graph import Graph
+from TerminationCheckerChange import TerminationCheckerChange
 
 from eckity.algorithms.simple_evolution import SimpleEvolution
 from eckity.breeders.simple_breeder import SimpleBreeder
@@ -16,7 +17,7 @@ from eckity.creators.ga_creators.bit_string_vector_creator import GABitStringVec
 
 class EvolutionaryAlgorithm:
 
-    def __init__(self, graph_size, edge_prob, population_size, elitism_rate, mutation_prob, mutation_bit_flips, tournament_size, tournament_prob, crossover_type, max_generation):
+    def __init__(self, graph_size, edge_prob, population_size, elitism_rate, mutation_prob, mutation_bit_flips, tournament_size, tournament_prob, crossover_type, max_generation,num_generations_unchanged):
         
         self.graph = RandomGraph(graph_size, edge_prob).get_graph()
         self.edge_prob = edge_prob
@@ -28,11 +29,12 @@ class EvolutionaryAlgorithm:
         self.tournament_size = tournament_size
         self.tournament_probability = tournament_prob
         self.max_generation = max_generation
+        self.num_generations_unchanged = num_generations_unchanged
         self.num_vertices = self.graph.get_num_vertices()
         self.graph_visualization = GraphVisualization(self.graph)
 
     def run(self):
-        self.before_run()
+        max_clique_size = self.before_run()
         start_time = time.time()
         algo = SimpleEvolution(
             Subpopulation(creators=GABitStringVectorCreator(self.num_vertices),
@@ -55,7 +57,8 @@ class EvolutionaryAlgorithm:
             breeder=SimpleBreeder(),
             max_workers=4,
             max_generation= self.max_generation,
-            statistics=BestAverageWorstStatistics()
+            statistics=BestAverageWorstStatistics(),
+            termination_checker = TerminationCheckerChange(self.num_generations_unchanged)
         )
     
 
@@ -65,8 +68,9 @@ class EvolutionaryAlgorithm:
         print("Total Time: ", f'{(time.time() - start_time):.2f}', " seconds")
 
         individual = algo.best_of_run_.vector
-        self.graph_visualization.visualize(
-            individual, algo.best_of_run_.get_pure_fitness())
+        fitness =  algo.best_of_run_.get_pure_fitness()
+        self.graph_visualization.visualize(individual, fitness)
+        return max_clique_size - fitness == 0
 
 
     def before_run(self):
@@ -74,7 +78,6 @@ class EvolutionaryAlgorithm:
         max_clique = self.graph_visualization.nx_find_max_clique()
         print((len(max_clique), max_clique))
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
         print("Running Evolutionary Algorithm")
         print("Graph Size: " + str(self.num_vertices))
         print("Graph Edge Probability: " + str(self.edge_prob))
@@ -86,4 +89,19 @@ class EvolutionaryAlgorithm:
         print("Tournament Probability: " + str(self.tournament_probability))
         print("Crossover Type: " + str(self.crossover_type))
         print("Max Generation: " + str(self.max_generation))
+        print("Number of Generations Unchanged: " + str(self.num_generations_unchanged))
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        
+        return len(max_clique)
+
+
+    def test_evolutionary_algorithm(graph_size, edge_prob, population_size, elitism_rate, mutation_prob, mutation_bit_flips, tournament_size, tournament_prob, crossover_type, max_generation, num_generations_unchanged):
+        run_times = []
+        successful_runs = 0
+        for i in range(40):
+            start_time = time.time()
+            if EvolutionaryAlgorithm(graph_size, edge_prob, population_size, elitism_rate, mutation_prob, mutation_bit_flips, tournament_size, tournament_prob, crossover_type, max_generation,num_generations_unchanged).run():
+                successful_runs += 1
+            run_times.append(time.time() - start_time)
+        average_runtime = sum(run_times) / len(run_times)
+        return average_runtime, successful_runs
